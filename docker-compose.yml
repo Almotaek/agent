@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  webhook-server:
+    build:
+      context: ./webhook
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - VERIFY_TOKEN=${VERIFY_TOKEN}
+      - ACCESS_TOKEN=${ACCESS_TOKEN}
+      - QUART_APP_URL=http://quart-app:80/webhook
+    depends_on:
+      - quart-app
+
+  quart-app:
+    build:
+      context: ./quart
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - ACCESS_TOKEN=${ACCESS_TOKEN}
+      - RECIPIENT_WAID=${RECIPIENT_WAID}
+      - PHONE_NUMBER_ID=${PHONE_NUMBER_ID}
+      - VERSION=${VERSION}
+      - APP_ID=${APP_ID}
+      - APP_SECRET=${APP_SECRET}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
